@@ -12,15 +12,35 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Ensure full height for centering */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
+  /* Global Gradient Background */
+  /* Maine syntax correct kiya hai taaki gradient sahi dikhe */
+  background: linear-gradient(
+    to bottom right,
+    #005fd3,
+    #19d7e5
+  ); /* Blue to Cyan/Teal */
+
+  background-attachment: fixed; /* Fix background on scroll */
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  display: flex; /* Centering Logic */
+  align-items: center; /* Vertical Center */
+  justify-content: center; /* Horizontal Center */
+  min-height: 100vh;
+}
+
+/* Next.js root div fix */
+body > div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
