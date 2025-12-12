@@ -6,7 +6,6 @@ interface User {
   email: string;
   name: string;
 }
-
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -28,19 +27,15 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    // Main Container with Background Bubbles
+
     <div className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden font-sans">
-      {/* Decorative Bubble: Top Right */}
+     
       <div className="absolute top-[-5%] right-[-5%] w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-
-      {/* Decorative Bubble: Bottom Left */}
       <div className="absolute bottom-[-5%] left-[-5%] w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-
-      {/* Main Single Dashboard Card */}
       <div className="bg-white/90 backdrop-blur-xl rounded-[40px] shadow-2xl w-full max-w-4xl p-8 md:p-10 relative z-10 border border-white/60">
-        {/* Header Row */}
+
         <div className="flex justify-between items-start mb-8">
-          {/* Logout Button (Left Side) */}
+          
           <button
             onClick={handleLogout}
             className="group flex items-center gap-2 text-gray-700 hover:text-red-500 font-semibold bg-gray-100 hover:bg-red-50 px-5 py-2.5 rounded-full transition-all duration-300"
@@ -61,13 +56,10 @@ export default function Dashboard() {
             <span>Logout</span>
           </button>
 
-          {/* App Brand */}
           <h2 className="text-xl font-bold text-gray-300 tracking-wider">
             AUTHAPP
           </h2>
         </div>
-
-        {/* Welcome Text */}
         <div className="text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-2">
             Welcome,{" "}
@@ -80,10 +72,7 @@ export default function Dashboard() {
             Here is your account overview.
           </p>
         </div>
-
-        {/* Inner Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Profile Section (Wide) */}
           <div className="md:col-span-3 bg-gradient-to-r from-slate-50 to-blue-50 rounded-3xl p-6 flex flex-col sm:flex-row items-center gap-6 border border-slate-100 shadow-sm">
             <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-3xl font-bold text-blue-600 shadow-md border-4 border-white">
               {user.name.charAt(0).toUpperCase()}
@@ -97,7 +86,6 @@ export default function Dashboard() {
             </span>
           </div>
 
-          {/* Stats Cards */}
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-lg transition-shadow">
             <div className="text-4xl font-black text-blue-500 mb-1">12</div>
             <div className="text-xs font-bold text-gray-400 uppercase tracking-widest">

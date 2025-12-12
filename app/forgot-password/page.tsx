@@ -10,7 +10,7 @@ import {
 
 export default function ForgotPassword() {
   const router = useRouter();
-  const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: Password
+  const [step, setStep] = useState(1); 
 
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -42,7 +42,6 @@ export default function ForgotPassword() {
     setLoading(false);
   };
 
-  // Step 2: Verify OTP
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -58,7 +57,6 @@ export default function ForgotPassword() {
     setLoading(false);
   };
 
-  // Step 3: Reset Password
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -70,7 +68,6 @@ export default function ForgotPassword() {
     setLoading(true);
     setError("");
 
-    // Hum OTP ko dobara bhej rahe hain confirm karne ke liye
     const result = await resetPasswordWithOtp(email, otp, password);
 
     if (result.success) {
@@ -87,7 +84,7 @@ export default function ForgotPassword() {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-[30px] shadow-2xl p-8 w-full max-w-[420px] relative overflow-hidden">
-        {/* Header Icon */}
+
         <div className="flex justify-center mb-6">
           <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl shadow-inner">
             {step === 1 && "📧"}
@@ -131,7 +128,6 @@ export default function ForgotPassword() {
             : "Create a new strong password."}
         </p>
 
-        {/* STEP 1: EMAIL */}
         {step === 1 && (
           <form onSubmit={handleEmailSubmit} className="space-y-6">
             <div>
@@ -168,7 +164,6 @@ export default function ForgotPassword() {
           </form>
         )}
 
-        {/* STEP 2: OTP */}
         {step === 2 && (
           <form onSubmit={handleOtpSubmit} className="space-y-6">
             <div>
@@ -210,7 +205,6 @@ export default function ForgotPassword() {
           </form>
         )}
 
-        {/* STEP 3: PASSWORD */}
         {step === 3 && (
           <form onSubmit={handlePasswordSubmit} className="space-y-5">
             <div>

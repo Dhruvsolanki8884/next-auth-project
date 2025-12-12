@@ -20,7 +20,6 @@ function VerifyOtpContent() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  // Timer for Resend
   const [timer, setTimer] = useState(30);
 
   useEffect(() => {
@@ -30,14 +29,12 @@ function VerifyOtpContent() {
     }
   }, [timer]);
 
-  // Handle Input Change for Split Inputs
   const handleChange = (index: number, value: string) => {
     if (isNaN(Number(value))) return;
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto focus next input
     if (value && index < 5) {
       const nextInput = document.getElementById(`otp-${index + 1}`);
       nextInput?.focus();
@@ -91,7 +88,7 @@ function VerifyOtpContent() {
       const result = await resendOtp(email);
       if (result.success) {
         setMessage(result.message);
-        setTimer(30); // Reset timer
+        setTimer(30); 
       } else {
         setError(result.message);
       }
@@ -121,7 +118,7 @@ function VerifyOtpContent() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-[#F3F4F6] p-4">
       <div className="bg-white rounded-[32px] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.1)] p-8 sm:p-10 w-full max-w-[480px]">
-        {/* Icon */}
+      
         <div className="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
           <svg
             width="28"

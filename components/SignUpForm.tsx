@@ -70,8 +70,6 @@ export default function SignupForm() {
       isValid = false;
     }
 
-    // Strong Password Validation
-    // Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
     const strongPasswordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!formData.password) {
@@ -212,7 +210,6 @@ export default function SignupForm() {
             )}
           </div>
 
-          {/* Responsive Phone Input Fix */}
           <div>
             <label className="block text-gray-500 text-xs font-medium mb-1.5 ml-1">
               Phone Number

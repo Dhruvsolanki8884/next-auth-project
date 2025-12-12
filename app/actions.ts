@@ -5,14 +5,13 @@ import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 
-// 1. Fixed Transporter Configuration (Added Pooling)
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
-  secure: true, // true for 465
-  pool: true, // Use pooled connections to prevent ETIMEDOUT
-  maxConnections: 1, // Limit concurrent connections
-  rateLimit: 5, // Limit messages per second
+  secure: true, 
+  pool: true, 
+  maxConnections: 1, 
+  rateLimit: 5, 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -76,8 +75,6 @@ export async function registerUser(formData: any) {
         isVerified: false,
       });
     }
-
-    // Professional HTML Email Template
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
         <h2 style="color: #2563EB; text-align: center;">Verify Your Email</h2>
@@ -148,7 +145,6 @@ export async function verifyOtp(email: string, otp: string) {
   }
 }
 
-
 export async function resendOtp(email: string) {
   await connectToDatabase();
   try {
@@ -190,7 +186,6 @@ export async function resendOtp(email: string) {
   }
 }
 
-// 4️⃣ Login User
 export async function loginUser(formData: any) {
   await connectToDatabase();
   try {
@@ -212,7 +207,6 @@ export async function loginUser(formData: any) {
   }
 }
 
-// 5️⃣ Send Forgot Password OTP
 export async function sendForgotPasswordOtp(email: string) {
   await connectToDatabase();
   try {
@@ -249,7 +243,6 @@ export async function sendForgotPasswordOtp(email: string) {
   }
 }
 
-// 6️⃣ Verify OTP Only
 export async function verifyOtpOnly(email: string, otp: string) {
   await connectToDatabase();
   try {
@@ -266,7 +259,6 @@ export async function verifyOtpOnly(email: string, otp: string) {
   }
 }
 
-// 7️⃣ Reset Password with OTP
 export async function resetPasswordWithOtp(
   email: string,
   otp: string,

@@ -7,9 +7,9 @@ const UserSchema = new Schema(
     birthDate: { type: String, required: true },
     phone: { type: String, required: true },
     password: { type: String, required: true },
-    isVerified: { type: Boolean, default: false }, // Email verification check
-    otp: { type: String }, // OTP store karega
-    otpExpires: { type: Date }, // Expiry time
+    isVerified: { type: Boolean, default: false }, 
+    otp: { type: String }, 
+    otpExpires: { type: Date }, 
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
   },
