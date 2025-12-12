@@ -5,17 +5,18 @@ import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 
+// 1. Fixed Transporter Configuration (Added Pooling)
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
-  secure: true, // true for 465, false for other ports
+  secure: true, // true for 465
+  pool: true, // Use pooled connections to prevent ETIMEDOUT
+  maxConnections: 1, // Limit concurrent connections
+  rateLimit: 5, // Limit messages per second
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  // Professional Debugging Options
-  logger: true,
-  debug: true,
 });
 
 // --- Helper: Send Email Function ---
@@ -29,11 +30,10 @@ async function sendEmail({
   html: string;
 }) {
   try {
-    // Verify connection configuration
-    await transporter.verify();
+    // REMOVED await transporter.verify(); -> This was causing delays and timeouts per request.
 
     const info = await transporter.sendMail({
-      from: `"Auth App Support" <${process.env.EMAIL_USER}>`, // Professional Name
+      from: `"Auth App Support" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
@@ -58,7 +58,7 @@ export async function registerUser(formData: any) {
 
     const hashedPassword = await bcrypt.hash(formData.password, 10);
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // Increased to 5 Minutes
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 Minutes
 
     if (existingUser && !existingUser.isVerified) {
       existingUser.fullname = formData.fullName;
@@ -133,7 +133,7 @@ export async function verifyOtp(email: string, otp: string) {
     if (user.otpExpires < new Date()) {
       return {
         success: false,
-        message: "OTP has expired. Please signup again.",
+        message: "OTP has expired. Please request a new one.",
       };
     }
 
@@ -153,7 +153,50 @@ export async function verifyOtp(email: string, otp: string) {
   }
 }
 
-// 3️⃣ Login User
+// 3️⃣ Resend OTP (New Function)
+export async function resendOtp(email: string) {
+  await connectToDatabase();
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return { success: false, message: "User not found" };
+
+    // Generate new OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 Minutes
+
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save();
+
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
+        <h2 style="color: #2563EB; text-align: center;">New Verification Code</h2>
+        <p style="color: #555; font-size: 16px;">Hello ${user.fullname},</p>
+        <p style="color: #555; font-size: 16px;">Here is your new verification code. It is valid for 5 minutes.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #1e293b; background: #f1f5f9; padding: 10px 20px; border-radius: 8px;">${otp}</span>
+        </div>
+      </div>
+    `;
+
+    const emailSent = await sendEmail({
+      to: email,
+      subject: "Your New Verification Code - AuthApp",
+      html: emailHtml,
+    });
+
+    if (!emailSent) {
+      return { success: false, message: "Failed to send email." };
+    }
+
+    return { success: true, message: "New OTP sent successfully!" };
+  } catch (error) {
+    console.error("Resend OTP Error:", error);
+    return { success: false, message: "Failed to resend OTP" };
+  }
+}
+
+// 4️⃣ Login User
 export async function loginUser(formData: any) {
   await connectToDatabase();
   try {
@@ -175,7 +218,7 @@ export async function loginUser(formData: any) {
   }
 }
 
-// 4️⃣ Send Forgot Password OTP
+// 5️⃣ Send Forgot Password OTP
 export async function sendForgotPasswordOtp(email: string) {
   await connectToDatabase();
   try {
@@ -212,7 +255,7 @@ export async function sendForgotPasswordOtp(email: string) {
   }
 }
 
-// 5️⃣ Verify OTP Only
+// 6️⃣ Verify OTP Only
 export async function verifyOtpOnly(email: string, otp: string) {
   await connectToDatabase();
   try {
@@ -229,7 +272,7 @@ export async function verifyOtpOnly(email: string, otp: string) {
   }
 }
 
-// 6️⃣ Reset Password with OTP
+// 7️⃣ Reset Password with OTP
 export async function resetPasswordWithOtp(
   email: string,
   otp: string,

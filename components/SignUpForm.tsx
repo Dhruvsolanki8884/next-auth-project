@@ -69,10 +69,20 @@ export default function SignupForm() {
       newErrors.phone = "Phone is required";
       isValid = false;
     }
-    if (!formData.password || formData.password.length < 6) {
-      newErrors.password = "Min 6 chars";
+
+    // Strong Password Validation
+    // Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    } else if (!strongPasswordRegex.test(formData.password)) {
+      newErrors.password =
+        "Must be 8+ chars, with Uppercase, Lowercase, Number & Symbol.";
       isValid = false;
     }
+
     setErrors(newErrors);
     return isValid;
   };
@@ -112,8 +122,8 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="w-full max-w-[400px] px-4 py-6">
-      <div className="bg-white rounded-[30px] shadow-[0_20px_40px_rgba(0,0,0,0.1)] p-8 w-full relative">
+    <div className="w-full max-w-[420px] px-4 py-6">
+      <div className="bg-white rounded-[30px] shadow-[0_20px_40px_rgba(0,0,0,0.1)] p-6 sm:p-8 w-full relative">
         <button
           onClick={() => router.push("/")}
           className="mb-6 hover:opacity-60 transition text-black"
@@ -133,7 +143,9 @@ export default function SignupForm() {
           </svg>
         </button>
 
-        <h1 className="text-[32px] font-bold text-gray-900 mb-1">Sign up</h1>
+        <h1 className="text-2xl sm:text-[32px] font-bold text-gray-900 mb-1">
+          Sign up
+        </h1>
         <p className="text-gray-500 text-sm mb-6">
           Already have an account?{" "}
           <Link
@@ -156,7 +168,7 @@ export default function SignupForm() {
               onChange={handleChange}
               className={`w-full h-12 px-4 rounded-xl bg-gray-50 border ${
                 errors.fullName ? "border-red-500" : "border-gray-200"
-              } text-gray-900 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium placeholder-gray-400`}
+              } text-gray-900 text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium placeholder-gray-400`}
             />
             {errors.fullName && (
               <p className="text-red-500 text-[10px] ml-1">{errors.fullName}</p>
@@ -174,7 +186,7 @@ export default function SignupForm() {
               onChange={handleChange}
               className={`w-full h-12 px-4 rounded-xl bg-gray-50 border ${
                 errors.email ? "border-red-500" : "border-gray-200"
-              } text-gray-900 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium placeholder-gray-400`}
+              } text-gray-900 text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium placeholder-gray-400`}
             />
             {errors.email && (
               <p className="text-red-500 text-[10px] ml-1">{errors.email}</p>
@@ -191,7 +203,7 @@ export default function SignupForm() {
               onChange={handleChange}
               className={`w-full h-12 px-4 rounded-xl bg-gray-50 border ${
                 errors.birthDate ? "border-red-500" : "border-gray-200"
-              } text-gray-900 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium uppercase`}
+              } text-gray-900 text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium uppercase`}
             />
             {errors.birthDate && (
               <p className="text-red-500 text-[10px] ml-1">
@@ -199,17 +211,19 @@ export default function SignupForm() {
               </p>
             )}
           </div>
+
+          {/* Responsive Phone Input Fix */}
           <div>
             <label className="block text-gray-500 text-xs font-medium mb-1.5 ml-1">
               Phone Number
             </label>
             <div className="flex gap-2">
-              <div className="relative">
+              <div className="relative shrink-0 w-[110px] sm:w-[130px]">
                 <select
                   name="countryCode"
                   value={formData.countryCode}
                   onChange={handleChange}
-                  className="h-12 pl-3 pr-8 appearance-none bg-gray-50 border border-gray-200 rounded-xl text-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer"
+                  className="w-full h-12 pl-3 pr-6 appearance-none bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer"
                 >
                   {COUNTRIES.map((c) => (
                     <option key={c.code} value={c.dial_code}>
@@ -235,18 +249,19 @@ export default function SignupForm() {
               <input
                 type="tel"
                 name="phone"
-                placeholder="Enter phone number"
+                placeholder="Phone number"
                 value={formData.phone}
                 onChange={handleChange}
-                className={`flex-1 h-12 px-4 rounded-xl bg-gray-50 border ${
+                className={`flex-1 min-w-0 h-12 px-4 rounded-xl bg-gray-50 border ${
                   errors.phone ? "border-red-500" : "border-gray-200"
-                } text-gray-900 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium placeholder-gray-400`}
+                } text-gray-900 text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium placeholder-gray-400`}
               />
             </div>
             {errors.phone && (
               <p className="text-red-500 text-[10px] ml-1">{errors.phone}</p>
             )}
           </div>
+
           <div>
             <label className="block text-gray-500 text-xs font-medium mb-1.5 ml-1">
               Set Password
@@ -255,12 +270,12 @@ export default function SignupForm() {
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                placeholder="*******"
+                placeholder="Strong password"
                 value={formData.password}
                 onChange={handleChange}
                 className={`w-full h-12 px-4 pr-10 rounded-xl bg-gray-50 border ${
                   errors.password ? "border-red-500" : "border-gray-200"
-                } text-gray-900 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium placeholder-gray-400`}
+                } text-gray-900 text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium placeholder-gray-400`}
               />
               <button
                 type="button"
@@ -313,7 +328,7 @@ export default function SignupForm() {
             disabled={loading}
             className="w-full h-12 bg-[#3B82F6] text-white rounded-xl font-bold text-base hover:bg-blue-600 transition shadow-[0_4px_14px_rgba(59,130,246,0.4)] mt-2 disabled:opacity-70"
           >
-            {loading ? "Sending OTP..." : "Register"}
+            {loading ? "Processing..." : "Register"}
           </button>
         </form>
       </div>
