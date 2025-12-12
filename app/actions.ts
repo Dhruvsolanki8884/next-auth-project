@@ -19,7 +19,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// --- Helper: Send Email Function ---
 async function sendEmail({
   to,
   subject,
@@ -30,23 +29,20 @@ async function sendEmail({
   html: string;
 }) {
   try {
-    // REMOVED await transporter.verify(); -> This was causing delays and timeouts per request.
-
     const info = await transporter.sendMail({
       from: `"Auth App Support" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
     });
-    console.log(`✅ Email sent to ${to}. Message ID: ${info.messageId}`);
+    console.log(`Email sent to ${to}. Message ID: ${info.messageId}`);
     return true;
   } catch (error) {
-    console.error("❌ Fatal Email Error:", error);
+    console.error("Fatal Email Error:", error);
     return false;
   }
 }
 
-// 1️⃣ Register User (Sign Up)
 export async function registerUser(formData: any) {
   await connectToDatabase();
   try {
@@ -118,7 +114,6 @@ export async function registerUser(formData: any) {
   }
 }
 
-// 2️⃣ Verify OTP
 export async function verifyOtp(email: string, otp: string) {
   await connectToDatabase();
   try {
@@ -153,7 +148,7 @@ export async function verifyOtp(email: string, otp: string) {
   }
 }
 
-// 3️⃣ Resend OTP (New Function)
+
 export async function resendOtp(email: string) {
   await connectToDatabase();
   try {
@@ -162,7 +157,7 @@ export async function resendOtp(email: string) {
 
     // Generate new OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 Minutes
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
 
     user.otp = otp;
     user.otpExpires = otpExpires;
@@ -178,7 +173,6 @@ export async function resendOtp(email: string) {
         </div>
       </div>
     `;
-
     const emailSent = await sendEmail({
       to: email,
       subject: "Your New Verification Code - AuthApp",
