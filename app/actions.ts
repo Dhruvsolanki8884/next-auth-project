@@ -8,10 +8,10 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
-  secure: true, 
-  pool: true, 
-  maxConnections: 1, 
-  rateLimit: 5, 
+  secure: true,
+  pool: true,
+  maxConnections: 1,
+  rateLimit: 5,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -41,7 +41,6 @@ async function sendEmail({
     return false;
   }
 }
-
 export async function registerUser(formData: any) {
   await connectToDatabase();
   try {
@@ -110,7 +109,6 @@ export async function registerUser(formData: any) {
     return { success: false, message: "Registration failed." };
   }
 }
-
 export async function verifyOtp(email: string, otp: string) {
   await connectToDatabase();
   try {
@@ -128,12 +126,10 @@ export async function verifyOtp(email: string, otp: string) {
         message: "OTP has expired. Please request a new one.",
       };
     }
-
     user.isVerified = true;
     user.otp = undefined;
     user.otpExpires = undefined;
     await user.save();
-
     return {
       success: true,
       message: "Email verified successfully!",
